@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pillole di LLM · La guida visuale italiana ai Transformer</title>
+  <meta name="description" content="Una guida interattiva in italiano per capire davvero come funzionano i Large Language Model e l'architettura Transformer: tokenizzazione, embedding, attention, predizione." />
+  <meta name="author" content="" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Pillole di LLM · Guida visuale italiana ai Transformer" />
+  <meta property="og:description" content="Capisci davvero i Large Language Model: tokenizzazione, embedding, self-attention e predizione, spiegati con visualizzazioni interattive in italiano." />
+  <meta name="theme-color" content="#0a0e16" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Hanken+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- Progress bar -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- ===================== NAV ===================== -->
+  <header class="nav" id="nav">
+    <a href="#top" class="nav__brand">
+      <span class="nav__logo" aria-hidden="true">
+        <span class="nav__logo-dot"></span>
+      </span>
+      <span class="nav__title">Pillole di <span class="nav__title-accent">LLM</span></span>
+    </a>
+    <nav class="nav__links" aria-label="Sezioni">
+      <a href="#panoramica">Panoramica</a>
+      <a href="#tokenizzazione">Token</a>
+      <a href="#embedding">Embedding</a>
+      <a href="#attention">Attention</a>
+      <a href="#blocco">Blocco</a>
+      <a href="#predizione">Predizione</a>
+      <a href="#glossario">Glossario</a>
+    </nav>
+    <button class="nav__menu-btn" id="menuBtn" aria-label="Apri menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main id="top">
+
+    <!-- ===================== HERO ===================== -->
+    <section class="hero" id="hero">
+      <canvas class="hero__canvas" id="heroCanvas" aria-hidden="true"></canvas>
+      <div class="hero__inner">
+        <h1 class="hero__title">
+          Come funziona<br />
+          <span class="hero__title-accent">davvero</span> un LLM
+        </h1>
+        <p class="hero__lead">
+          Dai modelli come GPT a Claude: cosa succede, passo dopo passo, quando scrivi una frase
+          e il modello risponde. Niente magia, solo <strong>token</strong>, <strong>vettori</strong>
+          e <strong>attention</strong>.
+        </p>
+        <div class="hero__cta">
+          <a href="#panoramica" class="btn btn--primary">Inizia il viaggio</a>
+        </div>
+        <div class="hero__scroll" aria-hidden="true">
+          <span>scorri</span>
+          <span class="hero__scroll-line"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== PANORAMICA ===================== -->
+    <section class="section" id="panoramica" data-reveal>
+      <div class="section__head">
+        <span class="section__num">01</span>
+        <h2 class="section__title">Il quadro generale</h2>
+        <p class="section__sub">
+          Un LLM è una funzione gigantesca che riceve del testo e prevede la parola successiva,
+          una alla volta. Sembra semplice, ma dentro c'è una pipeline di trasformazioni. Eccola.
+        </p>
+      </div>
+
+      <div class="pipeline" id="pipeline">
+        <!-- popolata da JS -->
+      </div>
+
+      <div class="callout">
+        <strong>L'idea chiave.</strong> Tutto ciò che un LLM fa è trasformare numeri in altri numeri.
+        Il testo viene convertito in vettori, questi attraversano decine di strati identici, e alla
+        fine si ottiene una distribuzione di probabilità sulla prossima parola. Clicca ogni fase
+        sopra per saltare alla sua spiegazione.
+      </div>
+    </section>
+
+    <!-- ===================== TOKENIZZAZIONE ===================== -->
+    <section class="section" id="tokenizzazione" data-reveal>
+      <div class="section__head">
+        <span class="section__num">02</span>
+        <h2 class="section__title">Tokenizzazione</h2>
+        <p class="section__sub">
+          I modelli non vedono lettere né parole: vedono <em>token</em>, frammenti di testo presi da
+          un vocabolario fisso. Una parola comune è spesso un solo token; una rara viene spezzata in più pezzi.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="tokenizer">
+        <div class="demo__controls">
+          <label class="field">
+            <span class="field__label">Scrivi qualcosa in italiano</span>
+            <textarea id="tokInput" class="field__input" rows="3" spellcheck="false">Il gatto dorme sul divano mentre programmo un transformer.</textarea>
+          </label>
+          <div class="demo__chips" role="group" aria-label="Esempi">
+            <button class="chip-btn" data-tok-example="L'intelligenza artificiale impara dai dati.">esempio 1</button>
+            <button class="chip-btn" data-tok-example="Antidisestablishmentarianism è una parola lunghissima.">parola rara</button>
+            <button class="chip-btn" data-tok-example="Roma 🏛️ è la capitale d'Italia nel 2026!">emoji & numeri</button>
+          </div>
+        </div>
+        <div class="demo__output">
+          <div class="tok-stats" id="tokStats"></div>
+          <div class="tok-tokens" id="tokTokens" aria-live="polite"></div>
+          <p class="demo__hint">Ogni riquadro è un token. Il numero è il suo <strong>ID</strong> nel vocabolario:
+            è così che il testo diventa una sequenza di interi.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Perché spezzare le parole?</strong> Con ~50.000 token si copre praticamente
+        qualsiasi testo in molte lingue, comprese parole mai viste, nomi propri e codice. È un
+        compromesso tra avere un vocabolario gestibile e non perdere informazione. L'algoritmo più
+        comune si chiama <em>Byte-Pair Encoding</em> (BPE): unisce iterativamente le coppie di
+        caratteri più frequenti.</p>
+      </div>
+    </section>
+
+    <!-- ===================== EMBEDDING ===================== -->
+    <section class="section" id="embedding" data-reveal>
+      <div class="section__head">
+        <span class="section__num">03</span>
+        <h2 class="section__title">Embedding: dai token ai vettori</h2>
+        <p class="section__sub">
+          Ogni ID token viene trasformato in un <em>vettore</em> di numeri, tipicamente centinaia o
+          migliaia. Questo vettore è la posizione del token in uno spazio dei significati: parole con
+          senso simile finiscono vicine.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="embedding">
+        <div class="emb-vectors" id="embVectors"></div>
+        <p class="demo__hint">Ogni riga è il vettore di embedding di un token (qui ridotto a 24 dimensioni
+          per leggibilità). Il colore codifica il valore di ciascuna dimensione: <span class="legend-neg">negativo</span> →
+          <span class="legend-pos">positivo</span>. Passa il mouse su una cella per vedere il numero.</p>
+      </div>
+
+      <div class="demo demo--split" data-demo="semantic">
+        <div class="semantic__text">
+          <h3 class="h3">Lo spazio dei significati</h3>
+          <p>Poiché i significati diventano geometria, possiamo fare <strong>aritmetica</strong> con le
+            parole. La direzione che separa <span class="kw">re</span> da <span class="kw">regina</span> è la
+            stessa che separa <span class="kw">uomo</span> da <span class="kw">donna</span>. Da qui il
+            celebre:</p>
+          <p class="equation"><span class="kw">re</span> − <span class="kw">uomo</span> + <span class="kw">donna</span> ≈ <span class="kw kw--hot">regina</span></p>
+          <p>La mappa a fianco è una proiezione 2D di vettori reali simili. Parole vicine = significati
+            vicini. È una caricatura (lo spazio vero ha centinaia di dimensioni), ma rende l'idea.</p>
+        </div>
+        <div class="semantic__map">
+          <canvas id="semanticCanvas" width="560" height="440" aria-label="Mappa dello spazio semantico"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== POSITIONAL ENCODING ===================== -->
+    <section class="section" id="posizione" data-reveal>
+      <div class="section__head">
+        <span class="section__num">04</span>
+        <h2 class="section__title">L'ordine conta: positional encoding</h2>
+        <p class="section__sub">
+          «Il cane morde l'uomo» e «l'uomo morde il cane» hanno gli stessi token, ma significati opposti.
+          Il transformer guarda tutti i token insieme, quindi serve un modo per dirgli <em>dove</em>
+          si trova ciascuno. Si aggiunge ad ogni embedding un segnale che dipende dalla posizione.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="posenc">
+        <div class="demo__controls demo__controls--inline">
+          <label class="field field--slider">
+            <span class="field__label">Lunghezza sequenza: <b id="posLenVal">24</b></span>
+            <input type="range" id="posLen" min="6" max="48" value="24" />
+          </label>
+        </div>
+        <canvas id="posCanvas" width="720" height="320" aria-label="Mappa del positional encoding sinusoidale"></canvas>
+        <p class="demo__hint">Ogni <strong>riga</strong> è una posizione nella frase, ogni <strong>colonna</strong>
+          una dimensione del vettore. Il pattern di onde sinusoidali è unico per ogni posizione: il
+          modello impara a leggerlo come una «firma» della posizione.</p>
+      </div>
+    </section>
+
+    <!-- ===================== ATTENTION ===================== -->
+    <section class="section section--feature" id="attention" data-reveal>
+      <div class="section__head">
+        <span class="section__num">05</span>
+        <h2 class="section__title">Self-attention: il cuore del transformer</h2>
+        <p class="section__sub">
+          Questo è il meccanismo che ha cambiato tutto. Ogni token «guarda» gli altri token della frase
+          e decide a quali prestare attenzione per costruire il proprio significato nel contesto.
+          La parola «sponda» significa cose diverse vicino a «fiume» o a «banca».
+        </p>
+      </div>
+
+      <div class="demo" data-demo="attention">
+        <div class="att-sentence" id="attSentence" aria-live="polite"></div>
+        <p class="demo__hint demo__hint--center">Clicca un token (la <em>query</em>) per vedere a quali altri
+          presta attenzione. Lo spessore e la luce degli archi indicano quanto «peso» riceve ciascuno.</p>
+
+        <div class="att-viz">
+          <canvas id="attCanvas" width="900" height="260" aria-label="Archi di attention tra i token"></canvas>
+        </div>
+
+        <div class="att-grid">
+          <div class="att-qkv">
+            <h3 class="h3">Query, Key, Value</h3>
+            <p>Da ogni embedding si ricavano tre vettori:</p>
+            <ul class="att-qkv__list">
+              <li><span class="qkv-tag qkv-tag--q">Q</span> <b>Query</b>, «cosa sto cercando?»</li>
+              <li><span class="qkv-tag qkv-tag--k">K</span> <b>Key</b>, «cosa offro io?»</li>
+              <li><span class="qkv-tag qkv-tag--v">V</span> <b>Value</b>, «l'informazione che porto»</li>
+            </ul>
+            <p>Si confronta la Query di un token con le Key di tutti gli altri (prodotto scalare): più
+              sono allineate, più alto è il punteggio. I punteggi passano per una <em>softmax</em> che li
+              trasforma in pesi che sommano a 1. Il risultato è una media pesata dei Value.</p>
+            <p class="equation equation--sm">Attention(Q,K,V) = softmax( Q·Kᵀ / √d ) · V</p>
+          </div>
+          <div class="att-matrix">
+            <h3 class="h3">Matrice di attention</h3>
+            <div id="attMatrix" class="att-matrix__grid" aria-label="Matrice di attention"></div>
+            <p class="demo__hint">Riga = query, colonna = key. Più una cella è chiara, più quella query
+              presta attenzione a quella key. Passa il mouse per i dettagli.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== MULTI-HEAD ===================== -->
+    <section class="section" id="multihead" data-reveal>
+      <div class="section__head">
+        <span class="section__num">06</span>
+        <h2 class="section__title">Più teste, più sguardi</h2>
+        <p class="section__sub">
+          Un solo meccanismo di attention vede una sola «relazione» per volta. I transformer ne usano
+          molti in parallelo, le <em>head</em>, ognuna specializzata: chi guarda la sintassi, chi i
+          riferimenti, chi le parole vicine.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="multihead">
+        <div class="heads" id="heads"></div>
+        <p class="demo__hint">Quattro head sulla stessa frase. Nota come ciascuna sviluppi un pattern
+          diverso: i loro risultati vengono poi concatenati e combinati. In un modello reale le head
+          per blocco sono spesso 12, 16 o più.</p>
+      </div>
+    </section>
+
+    <!-- ===================== BLOCCO TRANSFORMER ===================== -->
+    <section class="section section--feature" id="blocco" data-reveal>
+      <div class="section__head">
+        <span class="section__num">07</span>
+        <h2 class="section__title">Il blocco Transformer</h2>
+        <p class="section__sub">
+          L'attention è solo metà del lavoro. Un blocco completo alterna attention e una rete neurale
+          «feed-forward», con due trucchi che rendono possibile addestrare reti profondissime:
+          connessioni residue e normalizzazione.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="block">
+        <div class="block-diagram" id="blockDiagram"></div>
+        <div class="block-explain" id="blockExplain">
+          <p class="block-explain__default">Clicca un componente del diagramma per scoprirne il ruolo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== STACKING ===================== -->
+    <section class="section" id="profondita" data-reveal>
+      <div class="section__head">
+        <span class="section__num">08</span>
+        <h2 class="section__title">Impilare i blocchi: la profondità</h2>
+        <p class="section__sub">
+          Un blocco solo capisce poco. Impilandone decine, ogni strato raffina la rappresentazione:
+          i primi colgono sintassi e parole vicine, gli ultimi concetti astratti e ragionamento.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="stack">
+        <div class="demo__controls demo__controls--inline">
+          <label class="field field--slider">
+            <span class="field__label">Numero di blocchi: <b id="stackVal">12</b></span>
+            <input type="range" id="stackN" min="1" max="96" value="12" />
+          </label>
+        </div>
+        <div class="stack" id="stackViz" aria-hidden="true"></div>
+        <div class="stack-info" id="stackInfo"></div>
+      </div>
+
+      <div class="scale-table">
+        <h3 class="h3">Per dare un'idea della scala</h3>
+        <table>
+          <thead>
+            <tr><th>Modello</th><th>Blocchi</th><th>Dimensione embedding</th><th>Parametri</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>GPT-2 Small</td><td>12</td><td>768</td><td>124 milioni</td></tr>
+            <tr><td>GPT-2 XL</td><td>48</td><td>1600</td><td>1,5 miliardi</td></tr>
+            <tr><td>GPT-3</td><td>96</td><td>12.288</td><td>175 miliardi</td></tr>
+            <tr><td>LLM moderni (stima)</td><td>80–120+</td><td>fino a ~16k</td><td>centinaia di miliardi</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===================== PREDIZIONE ===================== -->
+    <section class="section section--feature" id="predizione" data-reveal>
+      <div class="section__head">
+        <span class="section__num">09</span>
+        <h2 class="section__title">La predizione: scegliere la prossima parola</h2>
+        <p class="section__sub">
+          Dopo l'ultimo blocco, il vettore del token finale viene proiettato su tutto il vocabolario:
+          un punteggio (<em>logit</em>) per ogni possibile token. La softmax li trasforma in probabilità,
+          e da lì si sceglie la parola successiva.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="output">
+        <div class="output__prompt">
+          <span class="output__label">Contesto</span>
+          <span class="output__text" id="outPrompt">Il gatto sale sul</span>
+          <span class="output__caret">▮</span>
+        </div>
+
+        <div class="demo__controls demo__controls--inline">
+          <label class="field field--slider">
+            <span class="field__label">Temperatura: <b id="tempVal">0.8</b></span>
+            <input type="range" id="tempSlider" min="0" max="200" value="80" />
+          </label>
+          <button class="btn btn--primary" id="sampleBtn">Campiona una parola</button>
+        </div>
+
+        <div class="output__bars" id="outBars"></div>
+        <p class="demo__hint" id="outHint">La <strong>temperatura</strong> controlla la casualità: bassa
+          → il modello sceglie quasi sempre il candidato più probabile (prevedibile); alta → appiattisce
+          le probabilità e diventa più creativo, ma anche più incoerente.</p>
+        <div class="output__result" id="outResult" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- ===================== RICAPITOLAZIONE ===================== -->
+    <section class="section" id="insieme" data-reveal>
+      <div class="section__head">
+        <span class="section__num">10</span>
+        <h2 class="section__title">Mettiamo tutto insieme</h2>
+        <p class="section__sub">
+          Genera una parola alla volta seguendo l'intera pipeline. Il modello aggiunge il token previsto
+          al contesto e ricomincia da capo: è così che nasce un testo, un token dopo l'altro.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="loop">
+        <div class="loop__stage" id="loopStage"></div>
+        <div class="demo__controls demo__controls--inline">
+          <button class="btn btn--primary" id="loopStep">Genera prossimo token</button>
+          <button class="btn btn--ghost" id="loopReset">Ricomincia</button>
+        </div>
+        <div class="loop__output">
+          <span class="output__label">Testo generato</span>
+          <p class="loop__text" id="loopText"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GLOSSARIO ===================== -->
+    <section class="section" id="glossario" data-reveal>
+      <div class="section__head">
+        <span class="section__num">11</span>
+        <h2 class="section__title">Glossario</h2>
+        <p class="section__sub">I termini chiave, in una frase ciascuno. Cerca o scorri.</p>
+      </div>
+      <input type="search" id="glossSearch" class="gloss-search" placeholder="Cerca un termine… (es. softmax)" aria-label="Cerca nel glossario" />
+      <div class="gloss" id="glossList"></div>
+    </section>
+
+    <!-- ===================== RISORSE ===================== -->
+    <section class="section" id="risorse" data-reveal>
+      <div class="section__head">
+        <span class="section__num">12</span>
+        <h2 class="section__title">Per approfondire</h2>
+        <p class="section__sub">Le fonti che ispirano questa guida e i punti di partenza per andare oltre.</p>
+      </div>
+      <div class="resources">
+        <a class="resource" href="https://poloclub.github.io/transformer-explainer/" target="_blank" rel="noopener">
+          <span class="resource__kind">Visualizzazione</span>
+          <span class="resource__title">Transformer Explainer</span>
+          <span class="resource__desc">GPT-2 che gira nel browser, con ogni passaggio visualizzato in tempo reale.</span>
+        </a>
+        <a class="resource" href="https://bbycroft.net/llm" target="_blank" rel="noopener">
+          <span class="resource__kind">Visualizzazione 3D</span>
+          <span class="resource__title">LLM Visualization</span>
+          <span class="resource__desc">Un viaggio tridimensionale dentro le matrici e i calcoli di un LLM.</span>
+        </a>
+        <a class="resource" href="https://jalammar.github.io/illustrated-transformer/" target="_blank" rel="noopener">
+          <span class="resource__kind">Articolo</span>
+          <span class="resource__title">The Illustrated Transformer</span>
+          <span class="resource__desc">Il classico di Jay Alammar che ha spiegato i transformer a una generazione.</span>
+        </a>
+        <a class="resource" href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">
+          <span class="resource__kind">Paper</span>
+          <span class="resource__title">Attention Is All You Need</span>
+          <span class="resource__desc">L'articolo del 2017 che ha introdotto l'architettura Transformer.</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__brand">Pillole di <span class="nav__title-accent">LLM</span></p>
+      <p class="footer__note">Una guida visuale e interattiva, in italiano, per capire i Large Language Model.
+        Le visualizzazioni sono illustrative: usano dati simulati per rendere intuitivi i meccanismi reali.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
