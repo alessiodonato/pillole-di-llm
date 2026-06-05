@@ -216,8 +216,8 @@
         <span class="section__num">05</span>
         <h2 class="section__title">Self-attention: il cuore del transformer</h2>
         <p class="section__sub">
-          Questo è il meccanismo che ha cambiato tutto. Ogni token «guarda» gli altri token della frase
-          e decide a quali prestare attenzione per costruire il proprio significato nel contesto.
+          Questo è il meccanismo che ha cambiato tutto. Ogni token «guarda» gli altri token nel contesto
+          e decide a quali prestare attenzione per costruire il proprio significato.
           La parola «sponda» significa cose diverse vicino a «fiume» o a «banca».
         </p>
       </div>
@@ -249,7 +249,9 @@
             <h3 class="h3">Matrice di attention</h3>
             <div id="attMatrix" class="att-matrix__grid" aria-label="Matrice di attention"></div>
             <p class="demo__hint">Riga = query, colonna = key. Più una cella è chiara, più quella query
-              presta attenzione a quella key. Passa il mouse per i dettagli.</p>
+              presta attenzione a quella key. La metà in alto a destra è vuota perché i modelli come GPT
+              sono <em>causali</em>: ogni token vede solo sé stesso e i precedenti, mai quelli futuri.
+              Passa il mouse per i dettagli.</p>
           </div>
         </div>
       </div>
