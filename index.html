@@ -53,6 +53,7 @@
       <a href="#attention">Attention</a>
       <a href="#blocco">Blocco</a>
       <a href="#predizione">Predizione</a>
+      <a href="#interpretabilita">Dentro</a>
       <a href="#glossario">Glossario</a>
     </nav>
     <button class="nav__menu-btn" id="menuBtn" aria-label="Apri menu" aria-expanded="false">
@@ -394,10 +395,79 @@
       </div>
     </section>
 
+    <!-- ===================== INTERPRETABILITÀ / SAE ===================== -->
+    <section class="section section--feature" id="interpretabilita" data-reveal>
+      <div class="section__head">
+        <span class="section__num">11</span>
+        <h2 class="section__title">Guardare dentro: l'interpretabilità</h2>
+        <p class="section__sub">
+          Abbiamo visto cosa <em>calcola</em> un transformer. Ma cosa «pensa» davvero ai suoi strati
+          interni? Il guaio è che i neuroni sono <em>polisemantici</em>: uno stesso neurone si accende
+          per concetti scollegati. Gli <em>sparse autoencoder</em> aiutano a districare questo groviglio.
+        </p>
+      </div>
+
+      <div class="callout">
+        <strong>Il nodo: la superposizione.</strong> Un modello impara molti più concetti di quanti
+        neuroni abbia, così li «comprime» sovrapponendoli. Guardare un singolo neurone, quindi, dice
+        poco: porta tracce di mille idee diverse mescolate insieme.
+      </div>
+
+      <div class="demo" data-demo="sae">
+        <div class="demo__controls">
+          <span class="field__label">Scegli un contesto da analizzare</span>
+          <div class="demo__chips" id="saeChips" role="group" aria-label="Esempi"></div>
+        </div>
+
+        <div class="sae-flow">
+          <div class="sae-col">
+            <div class="sae-col__head">
+              <span class="sae-col__tag">Attivazione interna</span>
+              <span class="sae-col__note">densa · opaca</span>
+            </div>
+            <div class="sae-dense" id="saeDense" aria-label="Vettore di attivazione denso"></div>
+            <p class="sae-col__cap">Il vettore del residual stream: leggibile dal modello, illeggibile per noi.</p>
+          </div>
+
+          <div class="sae-arrow" aria-hidden="true">
+            <span class="sae-arrow__box">SAE</span>
+            <span class="sae-arrow__line"></span>
+            <span class="sae-arrow__cap">dizionario sparso</span>
+          </div>
+
+          <div class="sae-col sae-col--wide">
+            <div class="sae-col__head">
+              <span class="sae-col__tag">Feature monosemantiche</span>
+              <span class="sae-col__note">sparse · interpretabili</span>
+            </div>
+            <div class="sae-grid" id="saeGrid" aria-label="Dizionario di feature"></div>
+            <p class="sae-col__cap">Centinaia di feature, ma solo poche attive: ognuna è un concetto.</p>
+          </div>
+        </div>
+
+        <div class="sae-active">
+          <h3 class="h3">Feature accese su questo contesto</h3>
+          <div class="sae-bars" id="saeBars"></div>
+        </div>
+
+        <p class="demo__hint">Passa il mouse sulle celle accese per leggere il concetto. Cambiando
+          contesto si illuminano feature diverse: è così che la ricerca di <em>interpretabilità</em>
+          scopre cosa rappresenta un modello, una feature alla volta.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Perché conta.</strong> Trovare feature interpretabili permette di <em>capire</em> e
+        persino <em>guidare</em> il comportamento di un modello: rafforzare una feature, attenuarne
+        un'altra, accorgersi quando «pensa» a un concetto pericoloso. È una delle frontiere della
+        ricerca sulla sicurezza dell'IA, resa celebre dal lavoro di Anthropic sulla
+        <em>monosemanticity</em>.</p>
+      </div>
+    </section>
+
     <!-- ===================== GLOSSARIO ===================== -->
     <section class="section" id="glossario" data-reveal>
       <div class="section__head">
-        <span class="section__num">11</span>
+        <span class="section__num">12</span>
         <h2 class="section__title">Glossario</h2>
         <p class="section__sub">I termini chiave, in una frase ciascuno. Cerca o scorri.</p>
       </div>
@@ -408,7 +478,7 @@
     <!-- ===================== RISORSE ===================== -->
     <section class="section" id="risorse" data-reveal>
       <div class="section__head">
-        <span class="section__num">12</span>
+        <span class="section__num">13</span>
         <h2 class="section__title">Per approfondire</h2>
         <p class="section__sub">Le fonti che ispirano questa guida e i punti di partenza per andare oltre.</p>
       </div>
@@ -432,6 +502,11 @@
           <span class="resource__kind">Paper</span>
           <span class="resource__title">Attention Is All You Need</span>
           <span class="resource__desc">L'articolo del 2017 che ha introdotto l'architettura Transformer.</span>
+        </a>
+        <a class="resource" href="https://transformer-circuits.pub/2023/monosemantic-features" target="_blank" rel="noopener">
+          <span class="resource__kind">Interpretabilità</span>
+          <span class="resource__title">Towards Monosemanticity</span>
+          <span class="resource__desc">Anthropic scompone le attivazioni di un modello in feature interpretabili con gli sparse autoencoder.</span>
         </a>
       </div>
     </section>

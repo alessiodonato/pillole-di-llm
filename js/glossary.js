@@ -20,6 +20,11 @@ const TERMS = [
   ["Parametri", "I numeri (pesi) appresi durante l'addestramento; i modelli moderni ne hanno miliardi."],
   ["Inferenza", "La fase in cui il modello, già addestrato, genera testo prevedendo un token alla volta."],
   ["Contesto", "La finestra di token che il modello può considerare contemporaneamente per fare la predizione."],
+  ["Interpretabilità", "Il campo che studia cosa rappresentano e come «ragionano» i modelli internamente, per capirli e renderli più sicuri."],
+  ["Superposizione", "La capacità di un modello di codificare più concetti di quanti neuroni abbia, sovrapponendoli nello stesso spazio."],
+  ["Polisemantico", "Detto di un neurone che si attiva per concetti diversi e scollegati, e quindi è difficile da interpretare."],
+  ["Sparse autoencoder", "Una rete che scompone le attivazioni interne in tante feature di cui poche attive, spesso interpretabili una per una."],
+  ["Feature", "Una direzione interpretabile estratta dalle attivazioni, che corrisponde a un concetto riconoscibile (es. «riferimenti a felini»)."],
 ];
 
 export function initGlossary() {

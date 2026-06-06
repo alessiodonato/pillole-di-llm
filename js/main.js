@@ -8,6 +8,7 @@ import { initMultihead } from "./multihead.js";
 import { initBlock } from "./block.js";
 import { initStack } from "./stack.js";
 import { initOutput, initLoop } from "./output.js";
+import { initInterpret } from "./interpret.js";
 import { initGlossary } from "./glossary.js";
 
 function ready(fn) {
@@ -28,6 +29,7 @@ ready(() => {
   initStack();
   initOutput();
   initLoop();
+  initInterpret();
   initGlossary();
 
   setupNav();
