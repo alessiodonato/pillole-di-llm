@@ -54,6 +54,7 @@
       <a href="#blocco">Blocco</a>
       <a href="#predizione">Predizione</a>
       <a href="#interpretabilita">Dentro</a>
+      <a href="#inferenza-locale">In locale</a>
       <a href="#glossario">Glossario</a>
     </nav>
     <button class="nav__menu-btn" id="menuBtn" aria-label="Apri menu" aria-expanded="false">
@@ -464,10 +465,119 @@
       </div>
     </section>
 
+    <!-- ===================== INFERENZA LOCALE / DS4 ===================== -->
+    <section class="section section--feature" id="inferenza-locale" data-reveal>
+      <div class="section__head">
+        <span class="section__num">12</span>
+        <h2 class="section__title">Dalla teoria alla pratica: un LLM a casa tua</h2>
+        <p class="section__sub">
+          Abbiamo visto come «pensa» un modello. Ma questi mostri hanno centinaia di miliardi di
+          parametri: come si fa a farne girare uno sul <em>proprio</em> computer, in privato, senza il
+          cloud? Serve un <em>motore di inferenza</em>. Guardiamone uno reale: <em>DwarfStar</em>.
+        </p>
+      </div>
+
+      <div class="callout ds4-intro">
+        <div>
+          <strong>DwarfStar (ds4)</strong>, di Salvatore Sanfilippo (antirez), è un motore di inferenza
+          piccolo e autosufficiente scritto in C, pensato per far girare <b>DeepSeek V4</b> in locale su
+          Mac (Metal), NVIDIA (CUDA) e AMD (ROCm). Non è un lettore generico: fa una cosa sola, far
+          «sentire finito» un modello locale dall'inizio alla fine, e la fa benissimo.
+        </div>
+        <a class="btn btn--ghost ds4-intro__btn" href="https://github.com/antirez/ds4" target="_blank" rel="noopener">Vedi su GitHub →</a>
+      </div>
+
+      <div class="demo" data-demo="quant">
+        <h3 class="h3">Idea 1 · Quantizzazione: rimpicciolire il modello</h3>
+        <p class="ds4-lead">Ogni parametro è un numero. Salvarlo con meno <em>bit</em> rende il modello
+          molto più piccolo, così entra in memoria. Sposta il cursore della precisione e guarda la matrice di pesi.</p>
+        <div class="demo__controls demo__controls--inline">
+          <label class="field field--slider">
+            <span class="field__label">Precisione: <b id="quantBits">16-bit</b></span>
+            <input type="range" id="quantSlider" min="0" max="3" value="3" />
+          </label>
+        </div>
+        <canvas id="quantCanvas" width="720" height="180" aria-label="Matrice di pesi quantizzata"></canvas>
+        <div class="quant-stats">
+          <div class="quant-stat">
+            <span class="quant-stat__k">Dimensione modello</span>
+            <b id="quantSize">~730 GB</b>
+          </div>
+          <div class="quant-stat quant-stat--bar">
+            <span class="quant-stat__k">Qualità (illustrativa)</span>
+            <div class="quant-bar"><div class="quant-bar__fill" id="quantQual"></div></div>
+          </div>
+        </div>
+        <p class="demo__hint">Meno bit = modello più leggero, con un piccolo calo di qualità. Il trucco
+          di DwarfStar è una quantizzazione <em>asimmetrica</em>: comprime a 2 bit solo gli «esperti» del
+          Mixture-of-Experts, che occupano quasi tutto lo spazio, lasciando intatte le parti delicate.
+          Così i 2 bit restano usabili sul serio, persino con gli agenti di coding.</p>
+      </div>
+
+      <div class="demo" data-demo="ram">
+        <h3 class="h3">Idea 2 · La RAM diventa un cursore, non un muro</h3>
+        <p class="ds4-lead">Una volta: o il modello entrava in RAM, o non partiva. DwarfStar tiene fisse
+          in memoria le parti comuni e fa arrivare gli esperti mancanti dall'<em>SSD</em> al volo.
+          Quanta RAM hai?</p>
+        <div class="demo__controls demo__controls--inline">
+          <label class="field field--slider">
+            <span class="field__label">RAM disponibile: <b id="ramVal">32 GB</b></span>
+            <input type="range" id="ramSlider" min="0" max="10" value="2" />
+          </label>
+        </div>
+        <div class="ram-bar" id="ramBar" aria-hidden="true"></div>
+        <div class="ram-legend">
+          <span><i class="ram-key ram-key--fix"></i> parti fisse (sempre in RAM)</span>
+          <span><i class="ram-key ram-key--ram"></i> esperti in RAM</span>
+          <span><i class="ram-key ram-key--ssd"></i> esperti su SSD</span>
+        </div>
+        <div class="ram-readout">
+          <div class="ram-mode" id="ramMode"></div>
+          <div class="ram-speed"><span id="ramSpeed">0</span> <small>token/s (illustrativi)</small></div>
+        </div>
+        <p class="demo__hint" id="ramHint"></p>
+      </div>
+
+      <h3 class="h3 ds4-cards-title">Altre idee chiave</h3>
+      <div class="ds4-cards">
+        <div class="ds4-card">
+          <span class="ds4-card__tag">memoria</span>
+          <h4>KV cache su disco</h4>
+          <p>La «memoria» della conversazione di solito vive in RAM. Qui può stare su SSD: riprendi una
+            sessione vecchia senza rielaborare tutto da capo.</p>
+        </div>
+        <div class="ds4-card">
+          <span class="ds4-card__tag">scala</span>
+          <h4>Inferenza distribuita</h4>
+          <p>Dividi un modello enorme su due macchine collegate (es. due Mac Studio). I prompt lunghi si
+            elaborano più in fretta in pipeline; la generazione paga un piccolo salto di rete per token.</p>
+        </div>
+        <div class="ds4-card">
+          <span class="ds4-card__tag">agente</span>
+          <h4>Agente nativo</h4>
+          <p>Un agente di coding in cui la sessione <em>è</em> la KV cache su disco: cambio sessione
+            istantaneo e stato sempre coerente, senza confini di rete interni.</p>
+        </div>
+        <div class="ds4-card">
+          <span class="ds4-card__tag">controllo</span>
+          <h4>Steering</h4>
+          <p>Spingendo una singola <em>direzione</em> nelle attivazioni (le feature della sezione
+            precedente) cambi il comportamento, più conciso o più restio su certi temi, senza ri-addestrare.</p>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Perché farlo in locale.</strong> I tuoi dati non lasciano il computer (privacy),
+        non paghi per token, funziona offline e hai il controllo totale. DwarfStar è software libero, di
+        qualità <em>beta</em>, sviluppato apertamente con forte assistenza dell'IA e debitore di
+        <em>llama.cpp</em> e GGML. È un ottimo esempio di cosa significhi, oggi, «possedere» un modello.</p>
+      </div>
+    </section>
+
     <!-- ===================== GLOSSARIO ===================== -->
     <section class="section" id="glossario" data-reveal>
       <div class="section__head">
-        <span class="section__num">12</span>
+        <span class="section__num">13</span>
         <h2 class="section__title">Glossario</h2>
         <p class="section__sub">I termini chiave, in una frase ciascuno. Cerca o scorri.</p>
       </div>
@@ -478,7 +588,7 @@
     <!-- ===================== RISORSE ===================== -->
     <section class="section" id="risorse" data-reveal>
       <div class="section__head">
-        <span class="section__num">13</span>
+        <span class="section__num">14</span>
         <h2 class="section__title">Per approfondire</h2>
         <p class="section__sub">Le fonti che ispirano questa guida e i punti di partenza per andare oltre.</p>
       </div>
@@ -507,6 +617,11 @@
           <span class="resource__kind">Interpretabilità</span>
           <span class="resource__title">Towards Monosemanticity</span>
           <span class="resource__desc">Anthropic scompone le attivazioni di un modello in feature interpretabili con gli sparse autoencoder.</span>
+        </a>
+        <a class="resource" href="https://github.com/antirez/ds4" target="_blank" rel="noopener">
+          <span class="resource__kind">Codice</span>
+          <span class="resource__title">DwarfStar (ds4)</span>
+          <span class="resource__desc">Il motore di inferenza locale di antirez per DeepSeek V4: quantizzazione, SSD streaming e KV cache su disco.</span>
         </a>
       </div>
     </section>

@@ -500,6 +500,57 @@ input[type="range"]::-moz-range-thumb {
 .sae-bar.is-top .sae-bar__fill { background: linear-gradient(90deg, var(--amber-deep), var(--amber)); }
 .sae-bar__pct { font-family: var(--mono); font-size: 13px; color: var(--fg-soft); }
 
+/* ===================== INFERENZA LOCALE / DS4 ===================== */
+.ds4-intro { display: flex; align-items: center; gap: 24px; }
+.ds4-intro b { color: var(--cyan); font-weight: 600; }
+.ds4-intro__btn { white-space: nowrap; flex-shrink: 0; }
+@media (max-width: 680px) { .ds4-intro { flex-direction: column; align-items: flex-start; } }
+
+.ds4-lead { font-size: 15px; color: var(--fg-soft); margin: 0 0 18px; max-width: 760px; }
+.ds4-lead em { color: var(--cyan); font-style: normal; }
+
+#quantCanvas { width: 100%; height: auto; display: block; border-radius: var(--radius-sm); background: var(--ink-900); border: 1px solid var(--line); }
+.quant-stats { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; margin-top: 18px; }
+.quant-stat { display: flex; flex-direction: column; gap: 4px; }
+.quant-stat--bar { flex: 1; min-width: 200px; }
+.quant-stat__k { font-size: 12px; color: var(--fg-mute); text-transform: uppercase; letter-spacing: 0.08em; }
+.quant-stat b { font-family: var(--mono); font-size: 26px; color: var(--amber); }
+.quant-bar { height: 16px; background: var(--ink-900); border: 1px solid var(--line-soft); border-radius: 999px; overflow: hidden; }
+.quant-bar__fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--cyan-deep), var(--cyan)); transition: width 0.35s cubic-bezier(0.2,0.8,0.2,1); }
+
+.ram-bar { display: flex; gap: 2px; height: 46px; border-radius: var(--radius-sm); overflow: hidden; background: var(--ink-900); border: 1px solid var(--line); padding: 3px; }
+.ram-seg { display: grid; place-items: center; font-family: var(--mono); font-size: 11px; color: var(--ink-900);
+  border-radius: 4px; overflow: hidden; white-space: nowrap; transition: width 0.4s cubic-bezier(0.2,0.8,0.2,1); }
+.ram-seg--fix { background: linear-gradient(180deg, var(--green), #6fc24e); }
+.ram-seg--ram { background: linear-gradient(180deg, var(--cyan), var(--cyan-deep)); }
+.ram-seg--ssd { background: repeating-linear-gradient(45deg, var(--violet), var(--violet) 6px, #8678e6 6px, #8678e6 12px); color: var(--fg); }
+.ram-seg--bad { background: linear-gradient(180deg, var(--rose), #e0566f); color: var(--ink-900); }
+.ram-legend { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 12px; font-size: 12px; color: var(--fg-mute); }
+.ram-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.ram-key { width: 13px; height: 13px; border-radius: 3px; display: inline-block; }
+.ram-key--fix { background: var(--green); }
+.ram-key--ram { background: var(--cyan); }
+.ram-key--ssd { background: repeating-linear-gradient(45deg, var(--violet), var(--violet) 4px, #8678e6 4px, #8678e6 8px); }
+
+.ram-readout { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; margin-top: 20px;
+  background: var(--ink-900); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 14px 18px; }
+.ram-mode { font-size: 15px; font-weight: 500; }
+.ram-mode.is-good { color: var(--green); }
+.ram-mode.is-stream { color: var(--cyan); }
+.ram-mode.is-bad { color: var(--rose); }
+.ram-speed { font-family: var(--mono); font-size: 28px; color: var(--amber); white-space: nowrap; }
+.ram-speed small { font-family: var(--body); font-size: 12px; color: var(--fg-mute); }
+
+.ds4-cards-title { margin: 40px 0 16px; }
+.ds4-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.ds4-card { background: linear-gradient(180deg, var(--ink-700), var(--ink-800)); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 20px; transition: transform 0.2s, border-color 0.2s, box-shadow 0.25s; }
+.ds4-card:hover { transform: translateY(-4px); border-color: var(--cyan-deep); box-shadow: var(--glow-cyan); }
+.ds4-card__tag { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--cyan); }
+.ds4-card h4 { font-family: var(--display); font-weight: 600; font-size: 18px; margin: 8px 0 8px; color: var(--fg); }
+.ds4-card p { font-size: 14px; color: var(--fg-soft); margin: 0; line-height: 1.55; }
+.ds4-card em { color: var(--amber); font-style: normal; }
+
 /* ===================== FOOTER ===================== */
 .footer { position: relative; z-index: 2; border-top: 1px solid var(--line); margin-top: 60px; padding: 50px clamp(16px, 4vw, 40px); }
 .footer__inner { max-width: var(--maxw); margin: 0 auto; }

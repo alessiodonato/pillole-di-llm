@@ -9,6 +9,7 @@ import { initBlock } from "./block.js";
 import { initStack } from "./stack.js";
 import { initOutput, initLoop } from "./output.js";
 import { initInterpret } from "./interpret.js";
+import { initInference } from "./inference.js";
 import { initGlossary } from "./glossary.js";
 
 function ready(fn) {
@@ -30,6 +31,7 @@ ready(() => {
   initOutput();
   initLoop();
   initInterpret();
+  initInference();
   initGlossary();
 
   setupNav();

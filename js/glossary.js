@@ -25,6 +25,10 @@ const TERMS = [
   ["Polisemantico", "Detto di un neurone che si attiva per concetti diversi e scollegati, e quindi è difficile da interpretare."],
   ["Sparse autoencoder", "Una rete che scompone le attivazioni interne in tante feature di cui poche attive, spesso interpretabili una per una."],
   ["Feature", "Una direzione interpretabile estratta dalle attivazioni, che corrisponde a un concetto riconoscibile (es. «riferimenti a felini»)."],
+  ["Motore di inferenza", "Il software che carica i pesi di un modello ed esegue il calcolo per generare testo, in locale o su server."],
+  ["Quantizzazione", "Rappresentare i pesi del modello con meno bit (es. 2 o 4 invece di 16) per ridurne drasticamente la dimensione, con un piccolo calo di qualità."],
+  ["KV cache", "La memoria di lavoro dell'attention: i vettori Key e Value già calcolati per i token del contesto, riusati per non rifare i conti a ogni passo."],
+  ["Mixture of Experts", "Architettura in cui, per ogni token, si attiva solo un sottoinsieme di «esperti» (sotto-reti), dando tanti parametri a costo di calcolo ridotto."],
 ];
 
 export function initGlossary() {
