@@ -111,7 +111,7 @@ body {
 .nav__logo-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ink-900); }
 .nav__title { font-family: var(--display); font-weight: 700; font-size: 19px; letter-spacing: -0.02em; }
 .nav__title-accent { color: var(--amber); }
-.nav__links { display: flex; gap: 4px; }
+.nav__links { display: flex; gap: 4px; margin-left: auto; }
 .nav__links a {
   color: var(--fg-soft); text-decoration: none; font-size: 14px; font-weight: 500;
   padding: 7px 12px; border-radius: 999px; transition: color 0.2s, background 0.2s;
@@ -185,6 +185,36 @@ body {
 .btn--ghost { background: var(--ink-700); color: var(--fg); border-color: var(--line); }
 .btn--ghost:hover { background: var(--ink-600); border-color: var(--cyan-deep); transform: translateY(-2px); }
 .btn--sm { font-size: 13px; padding: 8px 16px; }
+
+/* ===================== BUY ME A COFFEE ===================== */
+.coffee-btn {
+  display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+  font-family: var(--body); font-weight: 600; font-size: 13px; line-height: 1; white-space: nowrap;
+  color: var(--amber); text-decoration: none;
+  background: rgba(255, 180, 84, 0.08); border: 1px solid rgba(255, 180, 84, 0.35);
+  padding: 8px 14px; border-radius: 999px;
+  transition: color 0.2s, background 0.2s, border-color 0.2s, box-shadow 0.25s, transform 0.18s;
+}
+.coffee-btn:hover {
+  color: var(--ink-900); background: linear-gradient(100deg, var(--amber), var(--amber-deep));
+  border-color: transparent; box-shadow: var(--glow-amber); transform: translateY(-2px);
+}
+.coffee-btn__ico { flex-shrink: 0; }
+.nav .coffee-btn { margin-left: 8px; }
+
+.coffee-btn--solid {
+  margin-top: 8px; font-size: 15px; padding: 12px 22px; color: var(--ink-900);
+  background: linear-gradient(100deg, var(--amber), var(--amber-deep)); border-color: transparent; box-shadow: var(--glow-amber);
+}
+.coffee-btn--solid:hover { box-shadow: 0 0 40px -4px rgba(255, 180, 84, 0.7); transform: translateY(-2px); }
+
+@media (max-width: 1180px) {
+  .nav .coffee-btn { padding: 8px; }
+  .nav .coffee-btn .coffee-btn__txt { display: none; }
+}
+@media (max-width: 860px) {
+  .nav .coffee-btn { margin-left: auto; }
+}
 
 /* ===================== SEZIONI ===================== */
 .section {
