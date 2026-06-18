@@ -87,6 +87,17 @@
       </div>
     </section>
 
+    <div class="shell">
+      <aside class="toc" id="toc" aria-label="Indice della guida"></aside>
+      <div class="shell__main">
+
+      <!-- ===================== PARTE I ===================== -->
+      <header class="part" id="p-fondamenta" data-reveal>
+        <span class="part__kicker"></span>
+        <h2 class="part__title">Fondamenta</h2>
+        <p class="part__desc">Dal testo grezzo ai vettori: come una frase diventa una sequenza di numeri ricchi di significato, pronti per il modello.</p>
+      </header>
+
     <!-- ===================== PANORAMICA ===================== -->
     <section class="section" id="panoramica" data-reveal>
       <div class="section__head">
@@ -211,6 +222,13 @@
           modello impara a leggerlo come una «firma» della posizione.</p>
       </div>
     </section>
+
+      <!-- ===================== PARTE II ===================== -->
+      <header class="part" id="p-transformer" data-reveal>
+        <span class="part__kicker"></span>
+        <h2 class="part__title">Il Transformer</h2>
+        <p class="part__desc">Il motore vero e proprio: l'attention lascia che ogni parola guardi le altre, e impilando questi blocchi nasce la comprensione.</p>
+      </header>
 
     <!-- ===================== ATTENTION ===================== -->
     <section class="section section--feature" id="attention" data-reveal>
@@ -337,6 +355,13 @@
       </div>
     </section>
 
+      <!-- ===================== PARTE III ===================== -->
+      <header class="part" id="p-generazione" data-reveal>
+        <span class="part__kicker"></span>
+        <h2 class="part__title">Generazione</h2>
+        <p class="part__desc">Dall'ultimo strato alla parola scelta: come il modello trasforma i vettori in testo, un token alla volta.</p>
+      </header>
+
     <!-- ===================== PREDIZIONE ===================== -->
     <section class="section section--feature" id="predizione" data-reveal>
       <div class="section__head">
@@ -393,6 +418,193 @@
           <span class="output__label">Testo generato</span>
           <p class="loop__text" id="loopText"></p>
         </div>
+      </div>
+    </section>
+
+      <!-- ===================== PARTE · COME NASCE UN MODELLO ===================== -->
+      <header class="part" id="p-nascita" data-reveal>
+        <span class="part__kicker"></span>
+        <h2 class="part__title">Come nasce un modello</h2>
+        <p class="part__desc">Un transformer appena inizializzato è una lavagna vuota. Vediamo come, da una montagna di testo e dal giudizio umano, impara prima a prevedere e poi a rendersi davvero utile.</p>
+      </header>
+
+    <!-- ===================== ADDESTRAMENTO ===================== -->
+    <section class="section" id="addestramento" data-reveal>
+      <div class="section__head">
+        <span class="section__num"></span>
+        <h2 class="section__title">Addestramento: imparare a prevedere</h2>
+        <p class="section__sub">
+          Il pre-addestramento è un gioco gigantesco di «indovina la parola successiva». Ogni errore
+          diventa un segnale che corregge, di pochissimo, miliardi di parametri. Ripetuto su trilioni
+          di token, fa emergere grammatica, fatti e ragionamento.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="train">
+        <div class="train-task">
+          <span class="output__label">Frase di addestramento</span>
+          <p class="train-sentence">Nel mezzo del cammin di nostra <span class="train-blank" id="trainBlank">?</span></p>
+        </div>
+
+        <div class="demo__controls demo__controls--inline">
+          <label class="field field--slider">
+            <span class="field__label">Velocità di apprendimento: <b id="lrVal">0.30</b></span>
+            <input type="range" id="lrSlider" min="5" max="120" value="30" />
+          </label>
+          <button class="btn btn--primary" id="trainStep">Addestra</button>
+          <button class="btn btn--ghost" id="trainReset">Ripristina</button>
+        </div>
+
+        <div class="train-grid">
+          <div class="train-panel">
+            <span class="train-cap">Probabilità sulla parola successiva</span>
+            <div class="train-bars" id="trainBars"></div>
+          </div>
+          <div class="train-panel">
+            <span class="train-cap">Errore (loss) nel tempo · passo <b id="trainStepN">0</b></span>
+            <canvas id="trainCanvas" width="520" height="200" aria-label="Curva della loss durante l'addestramento"></canvas>
+          </div>
+        </div>
+
+        <p class="demo__hint" id="trainHint">La <strong>loss</strong> misura la «sorpresa» del modello
+          davanti alla parola giusta: alta quando sbaglia, vicina a zero quando è sicuro. Premi
+          <em>Addestra</em> e guardala scendere. Alza troppo la velocità di apprendimento e la discesa
+          diventa instabile: il modello «rimbalza» invece di convergere.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Cosa succede sotto.</strong> Per ogni token il modello produce una probabilità; la
+        confrontiamo con la parola realmente seguita e calcoliamo la <em>loss</em>. La
+        <em>backpropagation</em> stima quanto ciascun parametro ha contribuito all'errore, e la
+        <em>discesa del gradiente</em> li sposta di un passo nella direzione che riduce la loss. Un
+        parametro alla volta, un token alla volta, per settimane su migliaia di GPU.</p>
+      </div>
+    </section>
+
+    <!-- ===================== FINE-TUNING / RLHF ===================== -->
+    <section class="section section--feature" id="finetuning" data-reveal>
+      <div class="section__head">
+        <span class="section__num"></span>
+        <h2 class="section__title">Fine-tuning e RLHF: da «sa tutto» a «è utile»</h2>
+        <p class="section__sub">
+          Dopo il pre-addestramento il modello conosce la lingua, ma non sa di dover essere d'aiuto:
+          completa il testo e basta. Due fasi lo trasformano in un assistente, l'<em>instruction
+          tuning</em> e l'allineamento alle preferenze umane.
+        </p>
+      </div>
+
+      <div class="ft-stages">
+        <div class="ft-stage">
+          <span class="ft-stage__n">1</span>
+          <h3 class="h3">Pre-addestramento</h3>
+          <p>Prevede la parola successiva su mezzo internet. Sa <em>come</em> parla il mondo, ma a «Qual
+            è la capitale?» potrebbe rispondere con un'altra domanda.</p>
+        </div>
+        <div class="ft-stage">
+          <span class="ft-stage__n">2</span>
+          <h3 class="h3">Instruction tuning</h3>
+          <p>Lo si addestra su esempi di <em>istruzione → risposta utile</em> scritti da persone. Impara
+            il formato «domanda e risposta» e a seguire le richieste.</p>
+        </div>
+        <div class="ft-stage">
+          <span class="ft-stage__n">3</span>
+          <h3 class="h3">Allineamento (RLHF)</h3>
+          <p>Le persone indicano quale tra due risposte preferiscono. Da qui nasce un <em>modello di
+            ricompensa</em> che spinge il modello verso risposte migliori.</p>
+        </div>
+      </div>
+
+      <div class="demo" data-demo="rlhf">
+        <h3 class="h3">Diventa tu l'annotatore</h3>
+        <p class="ds4-lead">Per ogni richiesta scegli la risposta che preferisci. Ogni scelta insegna al
+          <em>modello di ricompensa</em> che cosa premiare.</p>
+
+        <div class="rlhf-stage" id="rlhfStage">
+          <div class="rlhf-prompt"><span class="output__label">Richiesta</span> <span id="rlhfPrompt"></span></div>
+          <div class="rlhf-cards" id="rlhfCards"></div>
+          <div class="rlhf-prog" id="rlhfProg"></div>
+        </div>
+
+        <div class="rlhf-reward">
+          <div class="rlhf-reward__head">
+            <span class="field__label">Cosa premia il modello di ricompensa</span>
+            <button class="btn btn--ghost btn--sm" id="rlhfReset">Ricomincia</button>
+          </div>
+          <div class="rlhf-bars" id="rlhfBars"></div>
+        </div>
+
+        <div class="rlhf-result" id="rlhfResult"></div>
+
+        <p class="demo__hint">Nota: il modello di ricompensa impara <em>le tue</em> preferenze, quali
+          che siano. Per questo chi annota i dati, e con quali criteri, incide profondamente sul
+          comportamento finale del modello.</p>
+      </div>
+    </section>
+
+      <!-- ===================== PARTE IV ===================== -->
+      <header class="part" id="p-avanzate" data-reveal>
+        <span class="part__kicker"></span>
+        <h2 class="part__title">Capacità avanzate</h2>
+        <p class="part__desc">Oltre il meccanismo di base: far ragionare il modello passo per passo e provare a guardare dentro le sue rappresentazioni.</p>
+      </header>
+
+    <!-- ===================== REASONING ===================== -->
+    <section class="section" id="reasoning" data-reveal>
+      <div class="section__head">
+        <span class="section__num"></span>
+        <h2 class="section__title">Reasoning: pensare prima di rispondere</h2>
+        <p class="section__sub">
+          Un modello può sparare la prima risposta che gli viene, oppure prendersi del tempo per
+          ragionare a voce alta, un passo alla volta. Sui problemi a più passaggi questo «pensiero»
+          intermedio cambia tutto: è la differenza tra tirare a indovinare e arrivarci davvero.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="reason">
+        <div class="reason-task">
+          <span class="output__label">Problema</span>
+          <p class="reason-problem" id="reasonProblem"></p>
+        </div>
+
+        <div class="demo__controls demo__controls--inline">
+          <div class="demo__chips" id="reasonChips">
+            <button class="chip-btn" data-mode="diretto">Risposta diretta</button>
+            <button class="chip-btn" data-mode="ragionato">Ragiona passo per passo</button>
+          </div>
+        </div>
+
+        <div class="demo__controls demo__controls--inline">
+          <label class="field field--slider">
+            <span class="field__label">Budget di pensiero: <b id="reasonBudgetVal">100%</b></span>
+            <input type="range" id="reasonBudget" min="0" max="100" value="100" />
+          </label>
+          <button class="btn btn--primary" id="reasonSolve">Risolvi</button>
+        </div>
+
+        <div class="reason-grid">
+          <div class="reason-panel">
+            <span class="train-cap">Catena di ragionamento</span>
+            <div class="reason-stream" id="reasonStream"></div>
+            <div class="reason-answer" id="reasonAnswer"></div>
+          </div>
+          <div class="reason-panel">
+            <span class="train-cap">Accuratezza (illustrativa)</span>
+            <div class="reason-gauge"><span class="reason-gauge__fill" id="reasonAcc"></span></div>
+            <canvas id="reasonCanvas" width="360" height="200" aria-label="Accuratezza in funzione del budget di pensiero"></canvas>
+          </div>
+        </div>
+
+        <p class="demo__hint">Più «budget di pensiero» concedi, più passaggi il modello può svolgere e
+          più sale l'accuratezza, fino a un punto in cui altri passi aggiungono poco. La risposta
+          diretta, invece, resta su un livello basso e fisso: salta il ragionamento e spesso sbaglia.
+          È l'idea del <em>test-time compute</em>, pensare di più al momento della risposta.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Perché funziona.</strong> Scrivere i passaggi intermedi, la
+        <em>chain-of-thought</em>, dà al modello uno spazio in cui scomporre il problema: ogni passo
+        diventa il contesto del successivo, invece di pretendere la risposta in un colpo solo. Non è
+        magia, è lo stesso modello che si concede più spazio per lavorare.</p>
       </div>
     </section>
 
@@ -464,6 +676,13 @@
         <em>monosemanticity</em>.</p>
       </div>
     </section>
+
+      <!-- ===================== PARTE V ===================== -->
+      <header class="part" id="p-pratica" data-reveal>
+        <span class="part__kicker"></span>
+        <h2 class="part__title">Nel mondo reale</h2>
+        <p class="part__desc">Dalla teoria all'uso quotidiano: come far girare un modello potente sul proprio computer e come collegarlo a fonti esterne perché risponda con fatti reali e aggiornati.</p>
+      </header>
 
     <!-- ===================== INFERENZA LOCALE / DS4 ===================== -->
     <section class="section section--feature" id="inferenza-locale" data-reveal>
@@ -574,6 +793,58 @@
       </div>
     </section>
 
+    <!-- ===================== RAG ===================== -->
+    <section class="section section--feature" id="rag" data-reveal>
+      <div class="section__head">
+        <span class="section__num"></span>
+        <h2 class="section__title">RAG: dare al modello le fonti giuste</h2>
+        <p class="section__sub">
+          Un modello sa solo ciò che ha visto in addestramento, e quando non sa rischia di
+          «inventare». Il RAG (Retrieval-Augmented Generation) risolve così: prima cerca i documenti
+          più pertinenti in una base di conoscenza, poi risponde basandosi su quelli.
+        </p>
+      </div>
+
+      <div class="demo" data-demo="rag">
+        <label class="field rag-search">
+          <span class="field__label">Fai una domanda</span>
+          <input type="text" class="field__input" id="ragInput" placeholder="Es. Cosa mangia un felino?" autocomplete="off" />
+        </label>
+        <div class="demo__chips" id="ragChips"></div>
+
+        <div class="rag-grid">
+          <div class="rag-panel">
+            <span class="train-cap">Base di conoscenza · ordinata per pertinenza</span>
+            <div class="rag-list" id="ragList"></div>
+          </div>
+          <div class="rag-panel">
+            <span class="train-cap">Contesto recuperato</span>
+            <div class="rag-context" id="ragContext"></div>
+            <div class="rag-answer" id="ragAnswer"></div>
+          </div>
+        </div>
+
+        <p class="demo__hint">Ogni documento ha un punteggio di <em>somiglianza semantica</em> con la
+          domanda: i più alti (evidenziati) vengono «recuperati» e passati al modello come contesto,
+          così la risposta è ancorata a fonti reali. Prova una domanda fuori tema: senza documenti
+          vicini, il modello dovrebbe affidarsi alla sola memoria, col rischio di allucinare.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Perché conta.</strong> Il RAG rende il modello aggiornabile senza ri-addestrarlo:
+        basta cambiare i documenti. È il modo più comune per dare a un LLM conoscenza privata o
+        recente, dai manuali aziendali alle notizie di oggi, riducendo le allucinazioni e
+        permettendo di citare le fonti.</p>
+      </div>
+    </section>
+
+      <!-- ===================== RIFERIMENTO ===================== -->
+      <header class="part part--ref" id="p-riferimento" data-reveal>
+        <span class="part__kicker"></span>
+        <h2 class="part__title">Riferimento</h2>
+        <p class="part__desc">I termini chiave in una frase ciascuno e i materiali per andare oltre.</p>
+      </header>
+
     <!-- ===================== GLOSSARIO ===================== -->
     <section class="section" id="glossario" data-reveal>
       <div class="section__head">
@@ -625,6 +896,9 @@
         </a>
       </div>
     </section>
+
+      </div>
+    </div>
 
   </main>
 

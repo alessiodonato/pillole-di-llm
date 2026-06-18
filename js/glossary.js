@@ -29,6 +29,20 @@ const TERMS = [
   ["Quantizzazione", "Rappresentare i pesi del modello con meno bit (es. 2 o 4 invece di 16) per ridurne drasticamente la dimensione, con un piccolo calo di qualità."],
   ["KV cache", "La memoria di lavoro dell'attention: i vettori Key e Value già calcolati per i token del contesto, riusati per non rifare i conti a ogni passo."],
   ["Mixture of Experts", "Architettura in cui, per ogni token, si attiva solo un sottoinsieme di «esperti» (sotto-reti), dando tanti parametri a costo di calcolo ridotto."],
+  ["Pre-addestramento", "La prima e più lunga fase: il modello impara a prevedere il token successivo su enormi quantità di testo, acquisendo lingua, fatti e capacità generali."],
+  ["Loss", "La misura dell'errore del modello: quanto la sua previsione si discosta dalla risposta corretta. Addestrare significa ridurla."],
+  ["Discesa del gradiente", "L'algoritmo che aggiusta i parametri a piccoli passi nella direzione che riduce la loss."],
+  ["Backpropagation", "Il metodo che calcola quanto ciascun parametro ha contribuito all'errore, propagando il segnale all'indietro nella rete."],
+  ["Learning rate", "La dimensione del passo della discesa del gradiente: troppo piccolo è lento, troppo grande rende l'addestramento instabile."],
+  ["Fine-tuning", "L'addestramento aggiuntivo di un modello già pre-addestrato su dati più specifici, per specializzarlo o renderlo più utile."],
+  ["Instruction tuning", "Il fine-tuning su esempi di istruzione e risposta, che insegna al modello a seguire le richieste invece di limitarsi a completare il testo."],
+  ["RLHF", "Reinforcement Learning from Human Feedback: l'allineamento del modello alle preferenze umane tramite un modello di ricompensa appreso dalle scelte delle persone."],
+  ["Modello di ricompensa", "Una rete che impara a dare un punteggio alle risposte, stimando quanto un umano le preferirebbe; guida l'allineamento nel RLHF."],
+  ["Chain-of-thought", "La tecnica per cui il modello scrive i passaggi intermedi del ragionamento prima della risposta finale, migliorando l'accuratezza sui problemi complessi."],
+  ["Test-time compute", "L'idea di far «pensare» di più il modello al momento della risposta (più passaggi o tentativi) per ottenere risultati migliori, a costo di più calcolo."],
+  ["RAG", "Retrieval-Augmented Generation: recuperare prima i documenti pertinenti da una base di conoscenza e poi generare la risposta basandosi su di essi."],
+  ["Ricerca semantica", "La ricerca che confronta i significati invece delle parole esatte, misurando la vicinanza tra gli embedding di query e documenti."],
+  ["Allucinazione", "Quando il modello produce informazioni plausibili ma false, perché completa il testo in modo convincente anche quando non «sa» la risposta."],
 ];
 
 export function initGlossary() {
